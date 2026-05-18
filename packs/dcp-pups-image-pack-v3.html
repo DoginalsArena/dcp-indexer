@@ -1,0 +1,441 @@
+<!doctype html><html><head><meta charset="utf-8"><title>DCP Pups</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;display:grid;place-items:center}
+#art{width:100vmin;height:100vmin;display:block;image-rendering:pixelated;background:#050816}
+</style></head><body>
+
+<svg id="art" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"></svg>
+
+<script id="dcp-pack" type="application/json">
+{
+  "p":"dcp",
+  "v":"0.1",
+  "op":"pack",
+  "collection":"DCP Pups",
+  "packId":"dcp-pups-image-pack-v2",
+  "maxSupply":50000,
+  "mime":"text/html",
+  "renderer":"svg-pixel-deterministic-v3",
+  "description":"Pure image on-chain pixel pup renderer for Dogecoin Chunk Protocol.",
+  "traits":{
+    "background":[
+      "night","sunset","matrix","doge_gold","purple_void","neon_city","moon","lava","ice","arcade","space","toxic","rainbow","blue_grid","red_alert","gold_vault","forest","castle","lab","ocean",
+      "cyber_tunnel","retro_wave","pink_sky","storm","desert","snow","deep_space","doge_temple","void","pixel_city","green_hill","underground","purple_stars","arena","factory","nuclear","dream","heaven","hell","crystal"
+    ],
+
+    "fur":[
+      "cream","gold","brown","dark","black","white","blue","pink","green","zombie","ice","lava","purple","silver","doge","ghost","orange","mint","choco","rainbow",
+      "emerald","ruby","sapphire","bronze","steel","toxic","snow","sand","copper","galaxy","shadow","banana","leopard","tiger","pastel","night_blue","fire_red","glow","diamond","pixel_noise"
+    ],
+
+    "ears":[
+      "floppy","long","pointy","round","tiny","robot","bat","shiba","ice","fire","gold","shadow",
+      "angel","devil","cyber","broken","radioactive","pixel","big","small","folded","sharp"
+    ],
+
+    "eyes":[
+      "normal","blue","green","laser","heart","sleepy","angry","cyber","matrix","gold","ice","fire","star","dead","alien","cute","purple","rainbow",
+      "diamond","glow","spiral","crazy","bloodshot","robot","white","void","pixel","scanner","tv_static","cross","happy","sad","coin","moon","sun"
+    ],
+
+    "mouth":[
+      "smile","neutral","tongue","angry","fangs","open","bone","wow","sad","robot","grin","cigar",
+      "pipe","gold_tooth","bloody","drool","monster","tiny","big_smile","evil","stitched","clown"
+    ],
+
+    "hat":[
+      "none","crown","halo","cap","beanie","pirate","samurai","wizard","helmet","horns","top_hat","doge_cap","ice_crown","fire_crown","flower","headphones","visor","bandana",
+      "viking","army","cowboy","space_helmet","ninja","king","queen","banana_hat","pixel_hood","pumpkin","cat_ears","skull","gold_halo","diamond_crown","radioactive"
+    ],
+
+    "clothes":[
+      "none","red_hoodie","blue_hoodie","purple_hoodie","armor","cape","doge_shirt","punk_jacket","space_suit","samurai_robe","wizard_robe","gold_chain",
+      "diamond_chain","matrix_coat","cyber_armor","winter_jacket","hawaii_shirt","pirate_coat","king_robe","devil_robe","angel_robe","radioactive_suit","ninja_suit","pixel_sweater"
+    ],
+
+    "effect":[
+      "none","stars","sparkles","matrix","fire","ice","coins","hearts","glitch","magic","laser","bubbles","gold_dust","rainbow_aura",
+      "lightning","smoke","fog","blood","snowflakes","confetti","pixels","binary","explosion","toxic_aura","purple_fire","green_fire","god_rays","dark_shadow","diamond_shine"
+    ],
+
+    "frame":[
+      "black","purple","gold","neon","doge","ice","fire","matrix","rainbow","arcade","silver","mythic",
+      "diamond","shadow","angel","devil","pixel","toxic","glow","retro","cyber","space"
+    ]
+  }
+}
+</script>
+
+<script>
+const M=JSON.parse(document.getElementById("dcp-pack").textContent)
+const T=M.traits
+
+function hash(s){
+  let h=2166136261>>>0
+  for(let i=0;i<s.length;i++){
+    h^=s.charCodeAt(i)
+    h=Math.imul(h,16777619)
+  }
+  return h>>>0
+}
+
+function rng(seed){
+  let x=hash(seed)||1
+  return()=>{
+    x^=x<<13
+    x^=x>>>17
+    x^=x<<5
+    return((x>>>0)%1e6)/1e6
+  }
+}
+
+function pick(arr,r){
+  return arr[Math.floor(r()*arr.length)]
+}
+
+function R(x,y,w,h,c,o=1){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" opacity="${o}"/>`
+}
+
+function P(p,c,o=1){
+  return `<polygon points="${p}" fill="${c}" opacity="${o}"/>`
+}
+
+function px(x,y,s,c,o=1){
+  return R(x,y,s,s,c,o)
+}
+
+function color(id){
+  return{
+    cream:"#f6e7bd",
+    gold:"#d89222",
+    brown:"#87552b",
+    dark:"#3b2414",
+    black:"#111827",
+    white:"#f8fafc",
+    blue:"#3b82f6",
+    pink:"#ec4899",
+    green:"#16a34a",
+    zombie:"#6fa36f",
+    ice:"#bfdbfe",
+    lava:"#ea580c",
+    purple:"#7c3aed",
+    silver:"#94a3b8",
+    doge:"#facc15",
+    ghost:"#e0f2fe",
+    orange:"#fb923c",
+    mint:"#5eead4",
+    choco:"#5a341b",
+    rainbow:"#f472b6",
+    emerald:"#10b981",
+    ruby:"#dc2626",
+    sapphire:"#2563eb",
+    bronze:"#b45309",
+    steel:"#64748b",
+    toxic:"#84cc16",
+    snow:"#ffffff",
+    sand:"#d6b071",
+    copper:"#b45309",
+    galaxy:"#7c3aed",
+    shadow:"#111111",
+    banana:"#fde047",
+    leopard:"#ca8a04",
+    tiger:"#f97316",
+    pastel:"#f9a8d4",
+    night_blue:"#1e3a8a",
+    fire_red:"#ef4444",
+    glow:"#22d3ee",
+    diamond:"#bae6fd",
+    pixel_noise:"#94a3b8"
+  }[id]||"#ddd"
+}
+
+function bg(t){
+  let s=""
+
+  if(t=="sunset"){
+    s=R(0,0,1000,1000,"#250044")
+    +R(0,530,1000,470,"#fb7185")
+    +R(260,230,480,480,"#facc15")
+  }
+
+  else if(t=="matrix"){
+    s=R(0,0,1000,1000,"#001105")
+    +Array.from({length:80},(_,i)=>
+      R((i*37)%1000,0,6,1000,"#22c55e",.25)
+    ).join("")
+  }
+
+  else if(t=="space"){
+    s=R(0,0,1000,1000,"#020617")
+    +Array.from({length:80},(_,i)=>
+      px((i*93)%960,(i*61)%940,8+(i%3)*5,"#fff",.65)
+    ).join("")
+  }
+
+  else if(t=="rainbow"){
+    s=Array.from({length:10},(_,i)=>
+      R(0,i*100,1000,100,
+      ["#ef4444","#f97316","#facc15","#22c55e","#22d3ee","#3b82f6","#8b5cf6","#ec4899","#14b8a6","#a3e635"][i])
+    ).join("")
+  }
+
+  else{
+    s=R(0,0,1000,1000,{
+      night:"#020617",
+      purple_void:"#23003d",
+      neon_city:"#14002e",
+      moon:"#111827",
+      lava:"#170505",
+      ice:"#082f49",
+      arcade:"#1e0b4b",
+      toxic:"#143014",
+      blue_grid:"#082f49",
+      red_alert:"#300",
+      gold_vault:"#422006",
+      forest:"#052e16",
+      castle:"#1f102a",
+      lab:"#111827",
+      ocean:"#083344",
+      cyber_tunnel:"#090020",
+      retro_wave:"#1e1b4b",
+      pink_sky:"#3b0a2e",
+      storm:"#1e293b",
+      desert:"#78350f",
+      snow:"#334155",
+      deep_space:"#000",
+      doge_temple:"#451a03",
+      void:"#050505",
+      pixel_city:"#111827",
+      green_hill:"#14532d",
+      underground:"#1c1917",
+      purple_stars:"#2e1065",
+      arena:"#7f1d1d",
+      factory:"#292524",
+      nuclear:"#365314",
+      dream:"#312e81",
+      heaven:"#dbeafe",
+      hell:"#450a0a",
+      crystal:"#164e63"
+    }[t]||"#050816")
+  }
+
+  return s
+}
+
+function effect(e){
+  if(e=="none") return ""
+
+  let c={
+    fire:"#fb923c",
+    ice:"#bfdbfe",
+    coins:"#facc15",
+    hearts:"#ec4899",
+    matrix:"#22c55e",
+    glitch:"#22d3ee",
+    lightning:"#fde047",
+    smoke:"#cbd5e1",
+    fog:"#e2e8f0",
+    blood:"#b91c1c",
+    snowflakes:"#fff",
+    confetti:"#f472b6",
+    pixels:"#94a3b8",
+    binary:"#22c55e",
+    explosion:"#f97316",
+    toxic_aura:"#84cc16",
+    purple_fire:"#a855f7",
+    green_fire:"#22c55e",
+    god_rays:"#fff",
+    dark_shadow:"#000",
+    diamond_shine:"#bae6fd"
+  }[e]||"#fff"
+
+  return Array.from({length:40},(_,i)=>
+    px((i*83+17)%940,70+((i*61)%850),10+(i%3)*8,c,.75)
+  ).join("")
+}
+
+function frame(t){
+  let c={
+    black:"#000",
+    purple:"#7c3aed",
+    gold:"#facc15",
+    neon:"#22d3ee",
+    doge:"#f59e0b",
+    ice:"#bfdbfe",
+    fire:"#f97316",
+    matrix:"#22c55e",
+    rainbow:"#f472b6",
+    arcade:"#a855f7",
+    silver:"#94a3b8",
+    mythic:"#e879f9",
+    diamond:"#bae6fd",
+    shadow:"#111",
+    angel:"#fff",
+    devil:"#dc2626",
+    pixel:"#64748b",
+    toxic:"#84cc16",
+    glow:"#22d3ee",
+    retro:"#f97316",
+    cyber:"#06b6d4",
+    space:"#6366f1"
+  }[t]||"#000"
+
+  return R(0,0,1000,34,c)
+    +R(0,966,1000,34,c)
+    +R(0,0,34,1000,c)
+    +R(966,0,34,1000,c)
+}
+
+function pup(fur,ears,eyes,mouth,hat,clothes){
+  let f=color(fur)
+  let o="#050505"
+  let bel="#f8e7c0"
+  let s=""
+
+  s+=R(690,620,170,70,o)
+  s+=R(710,585,140,70,f)
+
+  s+=R(315,850,370,45,"#000",.35)
+
+  s+=R(315,430,370,395,o)
+  s+=R(350,455,300,340,f)
+  s+=R(395,535,210,230,bel,.95)
+
+  s+=R(260,665,120,190,o)
+  s+=R(620,665,120,190,o)
+
+  s+=R(285,675,75,160,f)
+  s+=R(640,675,75,160,f)
+
+  s+=R(250,815,165,65,o)
+  s+=R(585,815,165,65,o)
+
+  s+=R(275,815,115,40,"#fff")
+  s+=R(610,815,115,40,"#fff")
+
+  s+=R(255,235,490,370,o)
+  s+=R(300,270,400,300,f)
+
+  if(["floppy","long","shiba","shadow","angel","devil"].includes(ears)){
+    s+=R(205,275,120,270,o)
+    s+=R(675,275,120,270,o)
+    s+=R(235,305,75,215,f)
+    s+=R(690,305,75,215,f)
+  }else{
+    s+=P("310,270 240,120 385,260",o)
+    s+=P("690,270 760,120 615,260",o)
+    s+=P("320,245 275,160 370,250",f)
+    s+=P("680,245 725,160 630,250",f)
+  }
+
+  s+=R(365,380,95,95,"#fff")
+  s+=R(540,380,95,95,"#fff")
+
+  let ec={
+    normal:"#111",
+    blue:"#2563eb",
+    green:"#16a34a",
+    laser:"#ef4444",
+    heart:"#ec4899",
+    cyber:"#22d3ee",
+    matrix:"#22c55e",
+    gold:"#facc15",
+    ice:"#bfdbfe",
+    fire:"#f97316",
+    star:"#fde047",
+    alien:"#84cc16",
+    cute:"#8b5cf6",
+    purple:"#7c3aed",
+    rainbow:"#f472b6",
+    diamond:"#bae6fd",
+    glow:"#fff",
+    spiral:"#a855f7",
+    crazy:"#dc2626",
+    bloodshot:"#b91c1c",
+    robot:"#94a3b8",
+    white:"#fff",
+    void:"#000",
+    pixel:"#64748b",
+    scanner:"#22d3ee",
+    tv_static:"#d1d5db",
+    cross:"#111",
+    happy:"#22c55e",
+    sad:"#60a5fa",
+    coin:"#facc15",
+    moon:"#cbd5e1",
+    sun:"#f59e0b"
+  }[eyes]||"#111"
+
+  s+=R(392,405,42,42,ec)
+  s+=R(568,405,42,42,ec)
+
+  if(eyes=="laser"){
+    s+=R(90,413,310,20,"#ef4444")
+    s+=R(610,413,310,20,"#ef4444")
+  }
+
+  s+=R(460,500,80,55,"#111")
+  s+=R(480,545,40,35,"#111")
+
+  if(mouth=="tongue"){
+    s+=R(455,595,90,70,"#fb7185")
+  }else if(mouth=="fangs"){
+    s+=R(430,590,140,40,"#111")
+    s+=R(455,630,25,50,"#fff")
+    s+=R(520,630,25,50,"#fff")
+  }else{
+    s+=R(430,590,140,35,"#111")
+  }
+
+  if(clothes!="none"){
+    let c=
+      clothes.includes("red")?"#dc2626":
+      clothes.includes("blue")?"#2563eb":
+      clothes.includes("purple")?"#7c3aed":
+      clothes.includes("gold")?"#facc15":
+      "#111827"
+
+    s+=R(330,650,340,140,c)
+  }
+
+  if(hat=="crown"){
+    s+=R(350,170,300,80,"#facc15")
+  }else if(hat=="halo"){
+    s+=R(350,150,300,35,"#fde68a")
+  }else if(hat!="none"){
+    s+=R(330,180,340,80,
+      ["#7c3aed","#111827","#dc2626","#facc15","#22d3ee"][hash(hat)%5]
+    )
+  }
+
+  return s
+}
+
+function render(){
+  let seed=(location.hash||"#demo").slice(1)
+  let r=rng(seed)
+
+  let tr={}
+  Object.keys(T).forEach(k=>{
+    tr[k]=pick(T[k],r)
+  })
+
+  document.getElementById("art").innerHTML=
+    bg(tr.background)
+    +effect(tr.effect)
+    +pup(
+      tr.fur,
+      tr.ears,
+      tr.eyes,
+      tr.mouth,
+      tr.hat,
+      tr.clothes
+    )
+    +frame(tr.frame)
+}
+
+window.onhashchange=render
+render()
+</script>
+
+</body></html>
