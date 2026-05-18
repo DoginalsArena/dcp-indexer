@@ -304,16 +304,7 @@ Example body:
 
 ---
 
-# Recommended Cloudflare Tunnel
 
-```txt
-api.doginalsarenanode.win → localhost:4000
-indexer.doginalsarenanode.win → localhost:3001
-dcp.doginalsarenanode.win → localhost:8099
-recovery.doginalsarenanode.win → localhost:8101
-```
-
----
 
 # Database
 
