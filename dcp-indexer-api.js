@@ -407,45 +407,6 @@ function reconstructPack(packId) {
   console.log("Reconstructed pack:", packId, out);
 }
 
-function simpleTraits(seed) {
-  const T = {
-    background:[
-      "night","sunset","matrix","doge_gold","purple_void","neon_city","moon","lava","ice","arcade","space","toxic","rainbow","blue_grid","red_alert","gold_vault","forest","castle","lab","ocean",
-      "cyber_tunnel","retro_wave","pink_sky","storm","desert","snow","deep_space","doge_temple","void","pixel_city","green_hill","underground","purple_stars","arena","factory","nuclear","dream","heaven","hell","crystal"
-    ],
-    fur:[
-      "cream","gold","brown","dark","black","white","blue","pink","green","zombie","ice","lava","purple","silver","doge","ghost","orange","mint","choco","rainbow",
-      "emerald","ruby","sapphire","bronze","steel","toxic","snow","sand","copper","galaxy","shadow","banana","leopard","tiger","pastel","night_blue","fire_red","glow","diamond","pixel_noise"
-    ],
-    ears:[
-      "floppy","long","pointy","round","tiny","robot","bat","shiba","ice","fire","gold","shadow",
-      "angel","devil","cyber","broken","radioactive","pixel","big","small","folded","sharp"
-    ],
-    eyes:[
-      "normal","blue","green","laser","heart","sleepy","angry","cyber","matrix","gold","ice","fire","star","dead","alien","cute","purple","rainbow",
-      "diamond","glow","spiral","crazy","bloodshot","robot","white","void","pixel","scanner","tv_static","cross","happy","sad","coin","moon","sun"
-    ],
-    mouth:[
-      "smile","neutral","tongue","angry","fangs","open","bone","wow","sad","robot","grin","cigar",
-      "pipe","gold_tooth","bloody","drool","monster","tiny","big_smile","evil","stitched","clown"
-    ],
-    hat:[
-      "none","crown","halo","cap","beanie","pirate","samurai","wizard","helmet","horns","top_hat","doge_cap","ice_crown","fire_crown","flower","headphones","visor","bandana",
-      "viking","army","cowboy","space_helmet","ninja","king","queen","banana_hat","pixel_hood","pumpkin","cat_ears","skull","gold_halo","diamond_crown","radioactive"
-    ],
-    clothes:[
-      "none","red_hoodie","blue_hoodie","purple_hoodie","armor","cape","doge_shirt","punk_jacket","space_suit","samurai_robe","wizard_robe","gold_chain",
-      "diamond_chain","matrix_coat","cyber_armor","winter_jacket","hawaii_shirt","pirate_coat","king_robe","devil_robe","angel_robe","radioactive_suit","ninja_suit","pixel_sweater"
-    ],
-    effect:[
-      "none","stars","sparkles","matrix","fire","ice","coins","hearts","glitch","magic","laser","bubbles","gold_dust","rainbow_aura",
-      "lightning","smoke","fog","blood","snowflakes","confetti","pixels","binary","explosion","toxic_aura","purple_fire","green_fire","god_rays","dark_shadow","diamond_shine"
-    ],
-    frame:[
-      "black","purple","gold","neon","doge","ice","fire","matrix","rainbow","arcade","silver","mythic",
-      "diamond","shadow","angel","devil","pixel","toxic","glow","retro","cyber","space"
-    ]
-  };
 
   function hash(s) {
     let h = 2166136261 >>> 0;
